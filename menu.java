@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class menu {
 
         private List<people> people = new ArrayList<>();
+        private DoubleOrderedList<Relationships> relations = new DoubleOrderedList<>();
 
         public static void main(String[] args) {
             menu menu = new menu();
@@ -21,8 +22,10 @@ public class menu {
             do {
                 System.out.println("Menu");
                 System.out.println("1. Cargar Archivo");
-                System.out.println("2. Imprimir");
-                System.out.println("3. Exit");
+                System.out.println("2. Cargar Relaciones");
+                System.out.println("3. Imprimir Personas");
+                System.out.println("4. Imprimir Relaciones");
+                System.out.println("5. Exit");
                 System.out.print("Choose an option: ");
                 choice = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
@@ -32,9 +35,15 @@ public class menu {
                         loadPeopleFromFile();
                         break;
                     case 2:
-                        printPeople();
+                        loadRelationships();
                         break;
                     case 3:
+                        printPeople();
+                        break;
+                    case 4:
+                        printRelationships();
+                        break;
+                    case 5:
                         System.out.println("Exiting...");
                         break;
                     default:
@@ -92,6 +101,44 @@ public class menu {
                 }
             }
         }
+
+        private void loadRelationships(){
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter filename: ");
+            String filename = scanner.nextLine();
+            String persona_orig;
+            String persona_amiga;
+
+
+            try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(","); // Assuming comma as the delimiter
+                    if (data.length == 2) { // Ensure the line has the correct number of parameters
+                        persona_orig = data[0];
+                        persona_amiga = data[1];
+                        relations.add(new Relationships(persona_orig, persona_amiga));
+                    } else {
+                        System.out.println("Invalid data format in line: " + line);
+                    }
+                }
+                System.out.println("People loaded successfully from " + filename);
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading the file: " + e.getMessage());
+            }
+        }
+
+        private void printRelationships(){
+            if (relations.isEmpty()) {
+                System.out.println("No people in the network.");
+            } else {
+                System.out.println("People in the network:");
+                for (Relationships relationships : relations) {
+                    System.out.println(relationships.getFriend_orig()+", "+relationships.getFriend_dest());
+                }
+            }
+        }
+
     }
 
 

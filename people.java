@@ -11,6 +11,7 @@ public class people {
     private String movies;
     private String groupCode;
 
+
     public people(String identifier, String name, String surname, String birthDate, String gender,
                   String birthplace, String hometown, String studiedAt,
                   String workedAt,String movies, String groupCode) {
@@ -25,6 +26,7 @@ public class people {
         this.workedAt = workedAt;
         this.movies = movies;
         this.groupCode = groupCode;
+
     }
 
     @Override
@@ -43,4 +45,5 @@ public class people {
                 ", groupCode='" + groupCode + '\'' +
                 '}';
     }
+
 }

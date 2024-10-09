@@ -8,7 +8,6 @@
 
 import exceptions.*;
 
-import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.exceptions;
 
 
 public class DoubleOrderedList<T> extends DoubleList<T> 
