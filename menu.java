@@ -49,7 +49,7 @@ public class menu {
                     default:
                         System.out.println("Invalid choice. Please try again.");
                 }
-            } while (choice != 3);
+            } while (choice != 5);
 
             scanner.close();
         }
