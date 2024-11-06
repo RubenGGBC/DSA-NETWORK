@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class menu {
 
@@ -138,6 +136,81 @@ public class menu {
                 }
             }
         }
+        private void SearchBornPlace(String City){
+            for(int i=0; i<people.size(); i++){
+                if(people.get(i).getBirthplace().equals(City)){
+                    System.out.println(people.get(i).getIdentifier()+people.get(i).getSurname());
+                }
+            }
+        }
+        private void SerchFriends(String Surname){
+            for (int i=0; i<people.size(); i++){}
+
+
+        }
+        private void residential() {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter filename: ");
+            String nombre = scanner.nextLine();
+            ArrayList<people> residential = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader(nombre))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    for(int i=0;i<people.size();i++){
+                        if(people.get(i).getIdentifier().equals(line)){
+                            String City = people.get(i).getHometown();
+                            for(int j=0; j<people.size();j++){
+                                if(people.get(j).getBirthplace().equals(City)){
+                                    System.out.println(people.get(j).getName()+
+                                            people.get(j).getSurname()+
+                                            people.get(j).getBirthplace()+
+                                            people.get(j).getHometown());
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+        } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        private ArrayList<people> MoviesCategory() {
+            ArrayList<String[]> movies = new ArrayList<>();
+            for(int i=0; i<people.size(); i++) {
+                String pelis = people.get(i).getMovies();
+                String[] pelisA = pelis.split(",");
+                if (movies.contains(pelisA) == false) {
+                    movies.add(pelisA);
+                    Arrays.stream(movies.get(i)).sorted();
+                }
+            }
+
+
+
+
+
+        for(int i=0; i<people.size(); i++){
+                String[] peliActual= people.get(i).getMovies().split(",");
+                Arrays.sort(peliActual);
+                int index= movies.indexOf(peliActual);
+                if(movies(peliActual)){
+
+
+                }
+
+            }
+
+        }
+    private void printSurnameFriends(String surname){
+        for (Relationships relationships : relations) {
+            if(relationships.getFriend_orig().equals(surname)){
+                System.out.println(relationships.toString());
+            }
+        }
+    }
 
     }
 
