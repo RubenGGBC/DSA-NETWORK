@@ -1,6 +1,6 @@
 import java.util.Comparator;
 
-public class people implements Comparator<people>{
+public class people {
     private String identifier;
     private String name;
     private String surname;
@@ -136,6 +136,7 @@ public class people implements Comparator<people>{
                 '}';
     }
 
+    /**
     @Override
     public int compare(people o1, people o2) {
         if (o1.getBirthplace().compareTo(o2.getBirthplace()) != 0) {
@@ -144,4 +145,5 @@ public class people implements Comparator<people>{
         }
         if (o1.getBirthDate().compareTo(o2.getBirthDate()) != 0) {}
     }
+    */
 }

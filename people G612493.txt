@@ -1,5 +1,6 @@
 idperson,name,lastname,birthdate,gender,birthplace,home,studiedat,workplaces,films,groupcode
 Mapimpi,Mapimpi,Smith,2-2-1985,male,Cape Town,Cape Town,UCT;Harvard,Google;Amazon,Black Panther;Mad Max,G612493
-Makapaka,Makapaka,Khan,7-7-1992,female,Dubai,Dubai,Oxford;MIT,Facebook;Apple,Star Wars;Harry Potter,G612493
+Makapaka,Makapaka,Khan,7-7-1992,female,Dubai,Dubai,Oxford;MIT,Facebook;Apple,Avatar;Interstellar,G612493
 LeoLustmuch,Leo,Lustmuch,10-10-1990,male,London,London,Imperial College;Stanford,Netflix;Tesla,Inception;Matrix,G612493
 MickyTrickuu,Micky,Trickuu,4-4-1980,male,Sydney,Sydney,UNSW;Cambridge,Microsoft;SpaceX,Avatar;Interstellar,G612493
+Mapimpi,Mapimpi,Smith,1-4-1997,male,London,London,UCLA;Stanford,Meta;Amazon,Black Panther;Mad Max,G612493

@@ -7,6 +7,7 @@ public class menu {
 
         private List<people> people = new ArrayList<>();
         private DoubleOrderedList<Relationships> relations = new DoubleOrderedList<>();
+        private DoubleOrderedList<movie_lists> movies = new DoubleOrderedList<>();
 
         public static void main(String[] args) {
             menu menu = new menu();
@@ -24,6 +25,8 @@ public class menu {
                 System.out.println("3. Imprimir Personas");
                 System.out.println("4. Imprimir Relaciones");
                 System.out.println("5. Exit");
+                System.out.println("6. Build movie groups");
+                System.out.println("7. Residential");
                 System.out.print("Choose an option: ");
                 choice = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
@@ -44,6 +47,12 @@ public class menu {
                     case 5:
                         System.out.println("Exiting...");
                         break;
+                    case 6:
+                        movieCategories();
+                        break;
+                    case 7:
+                        residential();
+                        break;
                     default:
                         System.out.println("Invalid choice. Please try again.");
                 }
@@ -60,6 +69,8 @@ public class menu {
 
             try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
                 String line;
+                br.readLine();
+
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(","); // Assuming comma as the delimiter
                     if (data.length == 11) { // Ensure the line has the correct number of parameters
@@ -110,6 +121,8 @@ public class menu {
 
             try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
                 String line;
+                br.readLine();
+
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(","); // Assuming comma as the delimiter
                     if (data.length == 2) { // Ensure the line has the correct number of parameters
@@ -155,62 +168,64 @@ public class menu {
             ArrayList<people> residential = new ArrayList<>();
             try (BufferedReader br = new BufferedReader(new FileReader(nombre))) {
                 String line;
+                br.readLine();
                 while ((line = br.readLine()) != null) {
                     for(int i=0;i<people.size();i++){
                         if(people.get(i).getIdentifier().equals(line)){
                             String City = people.get(i).getHometown();
+                            System.out.println("---------------------------");
+                            System.out.println(people.get(i).getIdentifier()+"'s hometown: "+people.get(i).getHometown());
+                            System.out.println("People born in "+people.get(i).getIdentifier()+"'s hometown: ");
+                            System.out.println("---------------------------");
                             for(int j=0; j<people.size();j++){
                                 if(people.get(j).getBirthplace().equals(City)){
-                                    System.out.println(people.get(j).getName()+
-                                            people.get(j).getSurname()+
-                                            people.get(j).getBirthplace()+
-                                            people.get(j).getHometown());
-
+                                    System.out.println(people.get(j).getIdentifier());
                                 }
-
                             }
                         }
                     }
                 }
+                System.out.println("---------------------------");
 
         } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        private ArrayList<people> MoviesCategory() {
-            ArrayList<String[]> movies = new ArrayList<>();
-            for(int i=0; i<people.size(); i++) {
-                String pelis = people.get(i).getMovies();
-                String[] pelisA = pelis.split(",");
-                if (movies.contains(pelisA) == false) {
-                    movies.add(pelisA);
-                    Arrays.stream(movies.get(i)).sorted();
+
+        private void movieCategories(){
+            ArrayList<String> movie_groups = new ArrayList<>();
+            movie_lists actual_category;
+            for (int i=0; i<people.size(); i++) {
+                actual_category = new movie_lists(people.get(i).getMovies());
+              if(!movies.contains(actual_category)){
+                  actual_category.getPeopleList().add(people.get(i));
+                  for (int j=i+1; j<people.size();j++){
+                      if (people.get(i).getMovies().equals(people.get(j).getMovies())){
+                          actual_category.getPeopleList().add(people.get(j));
+                      }
+                  }
+                  movies.add(actual_category);
+              }
+            }
+
+            for (movie_lists movie : movies) {
+                System.out.println("------------------");
+                System.out.println("Movie Group : "+movie.getListName());
+                System.out.println("Users inside group");
+                System.out.println("------------------");
+                for (people person : movie.getPeopleList()){
+                    System.out.println(person.getName()+" "+person.getSurname());
                 }
             }
+        }
 
-
-
-
-
-        for(int i=0; i<people.size(); i++){
-                String[] peliActual= people.get(i).getMovies().split(",");
-                Arrays.sort(peliActual);
-                int index= movies.indexOf(peliActual);
-                if(movies(peliActual)){
-
-
+        private void printSurnameFriends(String surname){
+            for (Relationships relationships : relations) {
+                if(relationships.getFriend_orig().equals(surname)){
+                    System.out.println(relationships.toString());
                 }
-
-            }
-
-        }
-    private void printSurnameFriends(String surname){
-        for (Relationships relationships : relations) {
-            if(relationships.getFriend_orig().equals(surname)){
-                System.out.println(relationships.toString());
             }
         }
-    }
 
     }
 
