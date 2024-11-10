@@ -1,6 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class menu {
@@ -8,7 +12,6 @@ public class menu {
         private List<people> people = new ArrayList<>();
         private DoubleOrderedList<Relationships> relations = new DoubleOrderedList<>();
         private DoubleOrderedList<movie_lists> movies = new DoubleOrderedList<>();
-
         public static void main(String[] args) {
             menu menu = new menu();
             menu.mainMenu();
@@ -16,17 +19,21 @@ public class menu {
 
         public void mainMenu() {
             Scanner scanner = new Scanner(System.in);
+            String surname,city,d1,d2;
             int choice;
 
             do {
                 System.out.println("Menu");
-                System.out.println("1. Cargar Archivo");
-                System.out.println("2. Cargar Relaciones");
-                System.out.println("3. Imprimir Personas");
-                System.out.println("4. Imprimir Relaciones");
-                System.out.println("5. Exit");
-                System.out.println("6. Build movie groups");
-                System.out.println("7. Residential");
+                System.out.println("1. Load file");
+                System.out.println("2. Load relationships");
+                System.out.println("3. Print people");
+                System.out.println("4. Print relationships");
+                System.out.println("6. Friends of people");
+                System.out.println("7. People born in specific city");
+                System.out.println("8. People born between dates");
+                System.out.println("9. Residential");
+                System.out.println("10. Build movie groups");
+                System.out.println("14. Exit");
                 System.out.print("Choose an option: ");
                 choice = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
@@ -44,19 +51,40 @@ public class menu {
                     case 4:
                         printRelationships();
                         break;
-                    case 5:
-                        System.out.println("Exiting...");
-                        break;
                     case 6:
-                        movieCategories();
+                        System.out.println("Enter surname: ");
+                        surname = scanner.nextLine();
+                        retrieveFriends(surname);
                         break;
                     case 7:
+                        System.out.println("Enter city name: ");
+                        city = scanner.nextLine();
+                        searchBornPlace(city);
+                        break;
+                    case 8:
+                        System.out.println("Enter 'from' date (dd/MM/yyyy): ");
+                        d1 = scanner.nextLine();
+                        System.out.println("Enter 'to' date (dd/MM/yyyy): ");
+                        d2 = scanner.nextLine();
+                        if (d1.compareTo(d2)<=0){
+                            bornBetweenDates(d1,d2);
+                        } else {
+                            System.err.println("Invalid date comparison!!!");
+                        }
+                        break;
+                    case 9:
                         residential();
+                        break;
+                    case 10:
+                        movieCategories();
+                        break;
+                    case 14:
+                        System.out.println("Exiting...");
                         break;
                     default:
                         System.out.println("Invalid choice. Please try again.");
                 }
-            } while (choice != 5);
+            } while (choice != 14);
 
             scanner.close();
         }
@@ -66,6 +94,7 @@ public class menu {
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter filename: ");
             String filename = scanner.nextLine();
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
                 String line;
@@ -77,7 +106,7 @@ public class menu {
                         String id = data[0];
                         String name = data[1];
                         String surname = data[2];
-                        String birthDate = data[3];
+                        LocalDate birthDate = LocalDate.parse(data[3],formato);
                         String gender = data[4];
                         String birthplace = data[5];
                         String hometown = data[6];
@@ -149,18 +178,61 @@ public class menu {
                 }
             }
         }
-        private void SearchBornPlace(String City){
-            for(int i=0; i<people.size(); i++){
-                if(people.get(i).getBirthplace().equals(City)){
-                    System.out.println(people.get(i).getIdentifier()+people.get(i).getSurname());
+
+        private void retrieveFriends(String pSurname){
+            people match;
+            for (people person : people) {
+                if (person.getSurname().equals(pSurname)) {
+                    match=person;
+                    System.out.println("-------------------------");
+                    System.out.println(match.getIdentifier()+"'s friends:");
+                    for (Relationships relationships : relations) {
+                        System.out.println("-------------------------");
+                        if (relationships.getFriend_orig().equals(match.getIdentifier())) {
+                            System.out.println(relationships.getFriend_dest());
+                        }
+                    }
+                    System.out.println("-------------------------");
                 }
             }
         }
-        private void SerchFriends(String Surname){
-            for (int i=0; i<people.size(); i++){}
 
-
+        private void searchBornPlace(String City){
+            System.out.println("People born in "+City);
+            System.out.println("---------------------");
+            for(int i=0; i<people.size(); i++){
+                if(people.get(i).getBirthplace().equals(City)){
+                    System.out.println(people.get(i).getIdentifier()+", "+
+                                        people.get(i).getSurname());
+                }
+            }
+            System.out.println("---------------------");
         }
+
+
+        private void bornBetweenDates(String pFrom, String pTo){
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate d1 = LocalDate.parse(pFrom,formato);
+            LocalDate d2 = LocalDate.parse(pTo,formato);
+            ArrayList<people> match = new ArrayList<>();
+            int born_year = 0;
+            for (people person : people) {
+                if (person.getBirthDate().getYear()>=d1.getYear() && person.getBirthDate().getYear()<=d2.getYear()){
+                    match.add(person);
+                }
+            }
+
+            people.sort(null);
+            System.out.println("People born between "+d1.getYear()+" and "+d2.getYear());
+            System.out.println("--------------------------------");
+            for (people person : match) {
+                 System.out.println(person.getBirthplace()+','+
+                                    person.getSurname()+','+
+                                    person.getName());
+            }
+            System.out.println("--------------------------------");
+        }
+
         private void residential() {
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter filename: ");
@@ -193,7 +265,6 @@ public class menu {
         }
 
         private void movieCategories(){
-            ArrayList<String> movie_groups = new ArrayList<>();
             movie_lists actual_category;
             for (int i=0; i<people.size(); i++) {
                 actual_category = new movie_lists(people.get(i).getMovies());
@@ -218,15 +289,6 @@ public class menu {
                 }
             }
         }
-
-        private void printSurnameFriends(String surname){
-            for (Relationships relationships : relations) {
-                if(relationships.getFriend_orig().equals(surname)){
-                    System.out.println(relationships.toString());
-                }
-            }
-        }
-
     }
 
 

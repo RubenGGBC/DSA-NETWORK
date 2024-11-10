@@ -1,10 +1,11 @@
+import java.time.LocalDate;
 import java.util.Comparator;
 
-public class people {
+public class people implements Comparable<people>{
     private String identifier;
     private String name;
     private String surname;
-    private String birthDate;
+    private LocalDate birthDate;
     private String gender;
     private String birthplace;
     private String hometown;
@@ -14,7 +15,7 @@ public class people {
     private String groupCode;
 
 
-    public people(String identifier, String name, String surname, String birthDate, String gender,
+    public people(String identifier, String name, String surname, LocalDate birthDate, String gender,
                   String birthplace, String hometown, String studiedAt,
                   String workedAt,String movies, String groupCode) {
         this.identifier = identifier;
@@ -43,7 +44,7 @@ public class people {
         return surname;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
@@ -87,7 +88,7 @@ public class people {
         this.surname = surname;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -136,14 +137,20 @@ public class people {
                 '}';
     }
 
-    /**
     @Override
-    public int compare(people o1, people o2) {
-        if (o1.getBirthplace().compareTo(o2.getBirthplace()) != 0) {
-            return 0;
-
+    public int compareTo(people o) {
+        if (this.birthplace.compareTo(o.birthplace) == 0) {
+            if (this.surname.compareTo(o.surname) == 0) {
+                if (this.name.compareTo(o.name) == 0) {
+                    return 0;
+                } else {
+                    return this.name.compareTo(o.name);
+                }
+            } else {
+                return this.surname.compareTo(o.surname);
+            }
+        } else {
+            return this.birthplace.compareTo(o.birthplace);
         }
-        if (o1.getBirthDate().compareTo(o2.getBirthDate()) != 0) {}
     }
-    */
 }
